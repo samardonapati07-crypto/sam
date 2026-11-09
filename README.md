@@ -1,48 +1,110 @@
-# 🚀 AAROP - Live Agentic Loop Demo
+# AAROP — Agentic Loop Demo · Samar
 
-An interactive, browser-based walk-through of the **AAROP** autonomous multi-agent reasoning system. Enter an objective and watch it flow through the full agentic loop - **Perceive → Plan → Act → Observe → Reflect → Adapt** - with live tool calls, self-verification, budget guardrails, and a replayable execution trace.
+An interactive demonstration of multi-agent orchestration. Enter an objective and watch it move through **Perceive → Plan → Act → Observe → Reflect → Adapt**, with tool calls, verification, recovery, budget limits, and an exportable execution trace.
 
-> 🔗 **Core engine & architecture:** [github.com/devtechedge/aarop](https://github.com/devtechedge/aarop)
+**Customized and maintained by [Samar](https://github.com/samardonapati07-crypto).**
 
-## ✨ What this demonstrates
+**Source:** [samardonapati07-crypto/sam](https://github.com/samardonapati07-crypto/sam) · **Demo engine:** [`lib/aarop.ts`](lib/aarop.ts) · **Architecture:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
-- The complete **agentic loop as an explicit state machine** (not a hidden prompt chain)
-- **Multi-agent orchestration** - the Orchestrator delegates to Researcher / Coder / Analyst / Verifier / Memory agents, which light up live
-- **Multi-step plans** - research-style objectives chain several tools and agents, then synthesize
-- **Resilient recovery** - a failure scenario triggers retries → circuit breaker → escalation
-- **Bounded autonomy** - a budget scenario shows the loop escalate instead of looping forever
-- Live, **exportable execution trace** (download the run as JSON)
-- An **interactive architecture diagram** mapping each demo component to its production backend
-- An optional **"bring your own OpenAI key"** toggle for real LLM narration (key stays in your browser)
+## Screenshots
 
-The loop logic in [`lib/aarop.ts`](lib/aarop.ts) is a faithful TypeScript port of the Python reference core. It runs **100% client-side** with a deterministic mock model provider - so the demo is instant, free, and never times out.
+Explore the live loop, multi-agent orchestration, and system architecture.
 
-## 🧑‍💻 Run locally
+| Live agentic loop | Multi-agent orchestration |
+| --- | --- |
+| ![Live agentic loop with a verified calculation result](docs/screenshots/01-agentic-loop.png) | ![Multi-agent orchestration with a completed research run](docs/screenshots/02-multi-agent.png) |
+
+| System architecture and engineering details |
+| --- |
+| ![System architecture and engineering details](docs/screenshots/03-architecture.png) |
+
+## Features
+
+- **Explicit loop state machine:** phase transitions appear in the execution trace.
+- **Agent roles:** Orchestrator, Researcher, Coder, Analyst, Verifier, and Memory are visualized during each run.
+- **Multi-step plans:** research and design examples combine local knowledge lookups with synthesis.
+- **Failure recovery:** the failure scenario demonstrates retries, a circuit breaker, and escalation.
+- **Budget guardrails:** step, simulated cost, and time limits bound execution.
+- **Trace export:** download a run's objective, events, and result as JSON.
+- **Architecture view:** see how the demo could map to a production system.
+- **Light and dark themes:** system-aware, with a saved manual preference.
+- **Optional OpenAI narration:** use your own API key for a single explanation of the final result.
+
+The default demo runs entirely in the browser with a deterministic mock provider and local tools. **No API key is needed.** Research uses a small built-in knowledge base; the displayed costs and confidence are demo values. The agent roles are simulated within one TypeScript loop.
+
+## Run locally
+
+Use **Node.js 22.13 or newer** and npm.
 
 ```bash
+git clone https://github.com/samardonapati07-crypto/sam.git
+cd sam
 npm ci
-npm test                 # node:test helpers
-npm run typecheck
-npm run dev              # http://localhost:3000
-npm run test:e2e         # Playwright Chromium smokes (starts Next itself)
+npm run dev
 ```
 
-## ▲ Deploy to Vercel (free)
+Open [http://localhost:3000](http://localhost:3000).
 
-1. Push this folder to a GitHub repo.
-2. Go to [vercel.com/new](https://vercel.com/new), import the repo.
-3. Framework preset: **Next.js** (auto-detected). No env vars needed.
-4. Click **Deploy**. Done - you get a live `https://<project>.vercel.app` URL.
+## Try the demo
 
-Because the demo is fully static/client-side, it deploys on Vercel's free Hobby tier with **no serverless timeout risk and no API costs**.
+| Scenario | What to expect |
+| --- | --- |
+| Compute | Calculate `(15 + 5) * 3` and verify the result: `60`. |
+| Research + synthesize | Retrieve local explanations of the agentic loop and RAG, then combine them. |
+| Design task | Combine local notes about Temporal, vLLM, and pgvector. |
+| Failure → retry → escalate | Inject tool failures and watch the run escalate after repeated errors. |
+| Budget exhaustion → escalate | Stop a research run when its step budget is exhausted. |
 
-## 🎨 Design
+After a run, select **Export JSON** to download the execution trace.
 
-A sky→dusk design language with **light / dark themes** (system-aware, with a manual toggle persisted to `localStorage` and no flash on load), Inter typography, and a sticky top nav.
+## Checks and production build
 
-## 🧱 Tech
+```bash
+npm test
+npm run typecheck
+npx playwright install chromium
+npm run test:e2e
+npm run build
+npm start
+```
 
-Next.js 14 (App Router) · React 18 · TypeScript · zero runtime dependencies beyond React/Next.
+Unit tests cover the calculator, planner, verifier, successful execution, circuit breaker, and budget escalation. Browser tests cover the page, a successful calculation, budget escalation, and theme switching.
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| [`app/page.tsx`](app/page.tsx) | Demo UI, scenarios, agent visualization, and trace export. |
+| [`app/layout.tsx`](app/layout.tsx) | Page metadata and theme initialization. |
+| [`app/opengraph-image.tsx`](app/opengraph-image.tsx) | Social preview with Samar's project details. |
+| [`components/ThemeToggle.tsx`](components/ThemeToggle.tsx) | Light/dark theme switch. |
+| [`lib/aarop.ts`](lib/aarop.ts) | Browser loop, planner, tools, verifier, and optional narration. |
+| [`lib/aarop.test.ts`](lib/aarop.test.ts) | Engine unit tests. |
+| [`e2e/demo.spec.ts`](e2e/demo.spec.ts) | Playwright browser checks. |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Implemented behavior and proposed production architecture. |
+| [`docs/screenshots/`](docs/screenshots/) | README screenshots. |
+
+This repository contains the browser demo. A Python engine, persistent database, hosted worker agents, and production infrastructure are not included.
+
+## Deploy
+
+1. Import [this repository](https://github.com/samardonapati07-crypto/sam) into your hosting provider.
+2. Select the **Next.js** framework and the repository root as the project directory.
+3. Use `npm ci` to install and `npm run build` to build.
+4. Deploy. The default mock demo needs no API keys or server secrets.
+
+On Vercel, metadata uses the production project domain automatically. On another host, optionally set `NEXT_PUBLIC_SITE_URL` to your deployed HTTPS URL for social preview links. Without a deployment URL, local metadata uses `http://localhost:3000`.
+
+The optional real narration sends a request directly from the browser to OpenAI and may incur API charges. The API key stays in React state until the page is closed or refreshed; it is sent to OpenAI for that request. See [`SECURITY.md`](SECURITY.md) for details.
+
+## Tech stack
+
+Next.js 14 App Router · React 18 · TypeScript · Node.js test runner · Playwright
+
+## License
+
+MIT. Original copyright and permission notices are retained in [`LICENSE`](LICENSE); source provenance is documented in [`NOTICE.md`](NOTICE.md).
 
 ---
-Built by **Devayan Mandal** · © 2026 · [github.com/devtechedge](https://github.com/devtechedge)
+
+Customized and maintained by **Samar** · © 2026 modifications · [github.com/samardonapati07-crypto](https://github.com/samardonapati07-crypto)

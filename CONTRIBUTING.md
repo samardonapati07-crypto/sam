@@ -1,45 +1,34 @@
-# Contributing to AAROP
+# Contributing
 
-Thanks for your interest in AAROP! Contributions, issues, and feature ideas are welcome.
+This repository is maintained by Samar and contains the AAROP browser demo. Run all commands from the repository root with Node.js 22.13 or newer.
 
-## Development setup
+## Setup and checks
 
-**Core engine (Python):**
 ```bash
-cd core
-pip install -e ".[dev]"
-pytest --cov=aarop          # run the test suite
-python examples/run_demo.py --verbose
+npm ci
+npm run dev
 ```
 
-**Web demo (Next.js):**
+Before submitting a change:
+
 ```bash
-cd web-demo
-npm ci
-npm test                    # node:test helpers
+npm test
 npm run typecheck
-npm run test:e2e            # Playwright Chromium smokes
-npm run build               # verify a production build
+npx playwright install chromium
+npm run test:e2e
+npm run build
 ```
 
 ## Guidelines
 
-- **Keep the agentic loop explicit.** New behavior should be modeled as inspectable phases/events, not hidden inside prompt strings.
-- **Python is canonical.** `core/` is the reference engine. A change to loop semantics, budgets or tool contracts lands there with tests first, and only then is mirrored into `web-demo/lib/aarop.ts`. If the two disagree, the Python side wins.
-- **Tests required.** Core orchestration changes must keep coverage ≥ 85%.
-- **Inject dependencies.** Models, tools, and memory backends are pluggable - keep them mockable.
-- **Document decisions.** Significant architectural changes get an ADR in `core/docs/ARCHITECTURE.md`.
+- Keep loop phases and transitions inspectable in `lib/aarop.ts`.
+- Preserve the deterministic, key-free default demo.
+- Keep API keys in browser memory and out of logs, committed files, and localStorage.
+- Update the existing engine tests when changing loop behavior.
+- Update documentation and screenshots when changing visible behavior.
+- Describe proposed backend services as architecture plans until they are implemented.
+- Preserve the original MIT notice and source attribution in `LICENSE` and `NOTICE.md`.
 
-## Pull requests
+Open issues and pull requests at [samardonapati07-crypto/sam](https://github.com/samardonapati07-crypto/sam), with reproduction steps, expected behavior, and check results.
 
-1. Fork and create a feature branch.
-2. Run `pytest` (Python) and `npm test && npm run typecheck && npm run test:e2e` (web) before opening the PR.
-3. Describe the change and link any related issue.
-
-## Reporting issues
-
-Open a GitHub issue with steps to reproduce, expected vs. actual behavior, and environment details.
-
-## License
-
-By contributing, you agree your contributions are licensed under the MIT License.
+Contributions are licensed under the repository's MIT license.
